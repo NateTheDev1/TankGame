@@ -57,3 +57,10 @@ void ATower::Tick(float DeltaSeconds)
 		}
 	}
 }
+
+void ATower::HandleDestruction()
+{
+	Super::HandleDestruction();
+
+	Destroy();
+}

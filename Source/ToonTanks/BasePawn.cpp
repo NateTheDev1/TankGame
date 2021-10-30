@@ -1,8 +1,6 @@
 // Nathaniel Richards 2021
 
 #include "BasePawn.h"
-
-#include "DrawDebugHelpers.h"
 #include "Projectile.h"
 #include "Components/CapsuleComponent.h"
 
@@ -23,6 +21,14 @@ ABasePawn::ABasePawn()
 
 	ProjectileSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Projectile Spawn Point"));
 	ProjectileSpawnPoint->SetupAttachment(TurretMesh);
+}
+
+void ABasePawn::HandleDestruction()
+{
+	// TODO: Handle visual and sound effects
+
+
+	
 }
 
 void ABasePawn::RotateTurret(FVector LookAtTarget) const

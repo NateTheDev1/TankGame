@@ -43,4 +43,6 @@ private:
 		AController* Instigator,
 		AActor* DamageCauser
 	);
+
+	class AToonTanksGameMode* ToonTanksGameMode;
 };

@@ -35,7 +35,7 @@ void ATank::BeginPlay()
 	PlayerControllerRef = Cast<APlayerController>(GetController());
 
 	if (!PlayerControllerRef)
-	{ 
+	{
 		UE_LOG(LogTemp, Error, TEXT("No Player controller"));
 	}
 }
@@ -78,6 +78,16 @@ void ATank::Tick(float DeltaTime)
 		PlayerControllerRef->GetHitResultUnderCursor(ECC_Visibility, true, OUT HitResult);
 		RotateTurret(HitResult.ImpactPoint);
 	}
+}
+
+void ATank::HandleDestruction()
+{
+	Super::HandleDestruction();
+
+
+	SetActorHiddenInGame(true);
+
+	SetActorTickEnabled(false);
 }
 
 
