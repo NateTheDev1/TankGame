@@ -35,7 +35,7 @@ void ATank::BeginPlay()
 	PlayerControllerRef = Cast<APlayerController>(GetController());
 
 	if (!PlayerControllerRef)
-	{
+	{ 
 		UE_LOG(LogTemp, Error, TEXT("No Player controller"));
 	}
 }
