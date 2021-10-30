@@ -2,9 +2,13 @@
 
 
 #include "Tank.h"
+
+#include "DrawDebugHelpers.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/AudioComponent.h"
+
+#define OUT
 
 ATank::ATank()
 {
@@ -23,9 +27,16 @@ void ATank::BeginPlay()
 
 	AudioComp = FindComponentByClass<UAudioComponent>();
 
-	if(!AudioComp)
+	if (!AudioComp)
 	{
 		UE_LOG(LogTemp, Error, TEXT("No audio component!"));
+	}
+
+	PlayerControllerRef = Cast<APlayerController>(GetController());
+
+	if (!PlayerControllerRef)
+	{
+		UE_LOG(LogTemp, Error, TEXT("No Player controller"));
 	}
 }
 
@@ -37,6 +48,8 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAxis(TEXT("Turn"), this, &ATank::Turn);
 
 	PlayerInputComponent->BindAction(TEXT("Boost"), IE_Pressed, this, &ATank::Boost);
+
+	PlayerInputComponent->BindAction(TEXT("Fire"), IE_Pressed, this, &ATank::Fire);
 }
 
 void ATank::Move(float Value)
@@ -57,14 +70,44 @@ void ATank::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	ValidateBoostAbility();
+
+	if (PlayerControllerRef)
+	{
+		FHitResult HitResult;
+		PlayerControllerRef->GetHitResultUnderCursor(ECC_Visibility, true, OUT HitResult);
+		RotateTurret(HitResult.ImpactPoint);
+	}
+}
+
+
+void ATank::Boost()
+{
+	if (!Boosting)
+	{
+		if (AudioComp)
+		{
+			AudioComp->Play();
+		}
+
+		GEngine->ClearOnScreenDebugMessages();
+		Boosting = true;
+		TimeSinceLastBoost = GetWorld()->GetTimeSeconds();
+		Speed += 400.f;
+	}
+}
+
+void ATank::ValidateBoostAbility()
+{
 	if (Boosting)
 	{
 		if (GEngine)
 		{
 			GEngine->ClearOnScreenDebugMessages();
-
+			const int32 SecondsLeft = static_cast<int32>(TimeSinceLastBoost + BoostLength - GetWorld()->
+				GetTimeSeconds()) + 1;
 			const FString BoostMessage = FString::Printf(
-				TEXT("%f seconds left boosting"), TimeSinceLastBoost + BoostLength - GetWorld()->GetTimeSeconds());
+				TEXT("%i seconds left boosting"), SecondsLeft);
 			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, BoostMessage);
 
 			if (TimeSinceLastBoost + BoostLength <= GetWorld()->GetTimeSeconds())
@@ -75,22 +118,5 @@ void ATank::Tick(float DeltaTime)
 				GEngine->AddOnScreenDebugMessage(-1, 10000, FColor::Yellow, TEXT("Press E To Boost"));
 			}
 		}
-	}
-}
-
-
-void ATank::Boost()
-{
-	if (!Boosting)
-	{
-		if(AudioComp)
-		{
-			AudioComp->Play();
-		}
-		
-		GEngine->ClearOnScreenDebugMessages();
-		Boosting = true;
-		TimeSinceLastBoost = GetWorld()->GetTimeSeconds();
-		Speed += 400.f;
 	}
 }

@@ -1,6 +1,8 @@
 // Nathaniel Richards 2021
 
 #include "BasePawn.h"
+
+#include "DrawDebugHelpers.h"
 #include "Components/CapsuleComponent.h"
 
 // Sets default values
@@ -22,14 +24,24 @@ ABasePawn::ABasePawn()
 	ProjectileSpawnPoint->SetupAttachment(TurretMesh);
 }
 
-// Called when the game starts or when spawned
-void ABasePawn::BeginPlay()
+void ABasePawn::RotateTurret(FVector LookAtTarget) const
 {
-	Super::BeginPlay();
+	const FVector ToTarget = LookAtTarget - TurretMesh->GetComponentLocation();
+	const FRotator LookAtRotation(0.f, ToTarget.Rotation().Yaw, 0.f);
+
+	TurretMesh->SetWorldRotation(LookAtRotation);
 }
 
-// Called every frame
-void ABasePawn::Tick(float DeltaTime)
+void ABasePawn::Fire()
 {
-	Super::Tick(DeltaTime);
+	DrawDebugSphere
+	(
+		GetWorld(),
+		ProjectileSpawnPoint->GetComponentLocation(),
+		10.f,
+		12,
+		FColor::Cyan,
+		true,
+		3.f
+	);
 }

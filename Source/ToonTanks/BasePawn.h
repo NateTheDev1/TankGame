@@ -16,12 +16,9 @@ public:
 	ABasePawn();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	void RotateTurret(FVector LookAtTarget) const;
+	void Fire();
 
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	class UCapsuleComponent* CapsuleComp;
