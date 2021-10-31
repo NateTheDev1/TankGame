@@ -29,7 +29,7 @@ void ATower::CheckFireCondition()
 	{
 		const bool InRange = CheckIfInRange();
 
-		if (InRange)
+		if (InRange && Tank->bAlive)
 		{
 			Fire();
 		}

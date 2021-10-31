@@ -19,6 +19,8 @@ public:
 	void HandleDestruction();
 
 	APlayerController* GetTankPlayerController() const { return PlayerControllerRef; };
+
+	bool bAlive = true;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -48,4 +50,7 @@ private:
 	class UAudioComponent* AudioComp = nullptr;
 
 	APlayerController* PlayerControllerRef;
+
+	UPROPERTY(EditAnywhere, Category = "Other Sounds")
+	USoundBase* EngineSound;
 };

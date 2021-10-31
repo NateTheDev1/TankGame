@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Camera/CameraShakeBase.h"
 #include "Projectile.generated.h"
 
 UCLASS()
@@ -36,7 +37,22 @@ private:
 		FVector NormalImpulse,
 		const FHitResult& Hit
 	);
-	
+
 	UPROPERTY(EditAnywhere)
 	float Damage = 50.f;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	UParticleSystem* HitParticles;
+
+	UPROPERTY(EditAnywhere)
+	UParticleSystemComponent* TrailParticles;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	USoundBase* LaunchSound;
+
+	UPROPERTY(EditAnywhere)
+	USoundBase* HitSound;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TSubclassOf<UCameraShakeBase> HitCameraShake;
 };

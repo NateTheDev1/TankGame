@@ -7,6 +7,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/AudioComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 #define OUT
 
@@ -37,6 +38,17 @@ void ATank::BeginPlay()
 	if (!PlayerControllerRef)
 	{
 		UE_LOG(LogTemp, Error, TEXT("No Player controller"));
+	}
+
+	if (EngineSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation
+		(
+			this,
+			EngineSound,
+			GetActorLocation(),
+			0.6f
+		);
 	}
 }
 
@@ -83,11 +95,9 @@ void ATank::Tick(float DeltaTime)
 void ATank::HandleDestruction()
 {
 	Super::HandleDestruction();
-
-
 	SetActorHiddenInGame(true);
-
 	SetActorTickEnabled(false);
+	bAlive = false;
 }
 
 
